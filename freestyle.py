@@ -7,13 +7,13 @@ import csv
 
 csv_file_path = "data/stock_prices.csv"
 
-print("STOCK PRICE LOOKUP APPLICATION")
+print("\nSTOCK PRICE LOOKUP APPLICATION\n")
 print("Today's date is: " +  str(datetime.date.today()))
 
 stock_symbols = []
 
 while True:
-    symbol = input("Please select a stock by symbol or 'DONE' if there are no more items: ")
+    symbol = input("\nPlease select a stock by symbol or 'DONE' if there are no more items: ")
     if symbol == "DONE":
         break
     else:
@@ -39,13 +39,9 @@ daily_closing_prices = response.ix["Close"] # ix() is a pandas DataFrame functio
 print(type(daily_closing_prices))
 print("\nHere are the Stock Prices for the days you indicated:\n")
 print(daily_closing_prices)
-confirmation = input("Would you like to save this data to a file? (Y/N)")
-#if confirmation = "Y"
-
-
-
-# with open(csv_file_path, "w") as csv_file:
-#     writer = csv.DictWriter(csv_file, fieldnames=["Date", "Stock", "Stock", "Stock", "Stock"])
-#     writer.writeheader() # uses fieldnames set above
-#     for stock_prices in daily_closing_prices:
-#         writer.writerow(stock_prices)
+confirmation = input("\nWould you like to save this data to a file? (Y/N)")
+if confirmation == "Y":
+    prices = daily_closing_prices.to_csv(csv_file_path)
+    print("Great! The data has been saved")
+else:
+    print("OK. We won't save the data")
