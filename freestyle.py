@@ -43,6 +43,7 @@ def price_lookup():
     print("\nHere are the Stock Prices for the days you indicated:\n")
     print(daily_closing_prices)
     confirmation = input("\nWould you like to save this data to a file? (Y/N) ")
+    confirmation = confirmation.upper()
     if confirmation == "Y":
         prices = daily_closing_prices.to_csv(csv_file_path)
         print("Great! The data has been saved")
@@ -54,19 +55,19 @@ def performance():
     symbol = symbol.upper()
     stock_symbols.append(symbol)
 
-    date_start = input("Please select a start date in the format yyyy-mm-dd: ")
-    end_date = input("Please select an end date in the format yyyy-mm-dd: ")
+    date_start = input("When did you buy the stock? input in the format yyyy-mm-dd: ")
+    end_date = input("When did you sell the stock? input in the format yyyy-mm-dd: ")
 
     date_start = datetime.datetime.strptime(date_start, '%Y-%m-%d')
     end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
 
-    number_of_stocks = input("Please input number of stocks owned: ")
+    number_of_stocks = input("Please input quantity of stocks owned: ")
     number_of_stocks = float(number_of_stocks)
     data_source = 'google'
 
     response = data.DataReader(stock_symbols, data_source, date_start, date_start)
     response2 = data.DataReader(stock_symbols, data_source, end_date, end_date)
-    
+
     daily_closing_prices = response.ix["Close"]
     daily_closing_prices2 = response2.ix["Close"]
     print(daily_closing_prices)
@@ -76,8 +77,11 @@ def performance():
     difference = float(difference)
 
     perform = number_of_stocks*difference
-    perform = '${0:.2f}'.format(perform)
-    print("\nYour gain or loss is: " + str(perform))
+
+    if daily_closing_prices2.values > daily_closing_prices.values:
+        print("\nYour gain is: " + str('${0:.2f}'.format(perform)))
+    else:
+        print("\nYour loss is: " + str('${0:.2f}'.format(abs(perform))))
 
 if operation == "1": price_lookup()
 elif operation == "2": performance()
