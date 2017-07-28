@@ -7,7 +7,7 @@ import csv
 
 csv_file_path = "data/stock_prices.csv"
 
-print("\nSTOCK PRICE LOOKUP APPLICATION\n")
+print("\nSTOCK PRICE LOOKUP APPLICATION")
 print("Welcome! Today's date is: " +  str(datetime.date.today()))
 print("\nPlease select one of the following options by inputting the corresponding number: ")
 print("\n1 - STOCK PRICE")
@@ -16,11 +16,12 @@ print("2 - STOCK PERFORMANCE")
 operation = input("")
 
 stock_symbols = []
-
+prices = []
 
 def price_lookup():
     while True:
         symbol = input("\nPlease select a stock by symbol or 'DONE' if there are no more items: ")
+        symbol = symbol.upper()
         if symbol == "DONE":
             break
         else:
@@ -48,9 +49,9 @@ def price_lookup():
     else:
         print("OK. The data is not saved")
 
-
 def performance():
     symbol =input("Please select a stock by symbol: ")
+    symbol = symbol.upper()
     stock_symbols.append(symbol)
 
     date_start = input("Please select a start date in the format yyyy-mm-dd: ")
@@ -60,14 +61,24 @@ def performance():
     end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
 
     number_of_stocks = input("Please input number of stocks owned: ")
-
+    number_of_stocks = float(number_of_stocks)
     data_source = 'google'
 
-    response = data.DataReader(stock_symbols, data_source, date_start, end_date)
+    response = data.DataReader(stock_symbols, data_source, date_start, date_start)
+    response2 = data.DataReader(stock_symbols, data_source, end_date, end_date)
+    
     daily_closing_prices = response.ix["Close"]
-    prices = daily_closing_prices.to_csv(csv_file_path)
+    daily_closing_prices2 = response2.ix["Close"]
+    print(daily_closing_prices)
+    print(daily_closing_prices2)
 
-    print("Performance")
+    difference = daily_closing_prices2.values-daily_closing_prices.values
+    difference = float(difference)
+
+    perform = number_of_stocks*difference
+    perform = '${0:.2f}'.format(perform)
+    print("\nYour gain or loss is: " + str(perform))
+
 if operation == "1": price_lookup()
 elif operation == "2": performance()
 else:
