@@ -9,14 +9,13 @@ csv_file_path = "data/stock_prices.csv"
 
 print("\nSTOCK PRICE LOOKUP APPLICATION")
 print("Welcome! Today's date is: " +  str(datetime.date.today()))
-print("\nPlease select one of the following options by inputting the corresponding number: ")
+print("\nSelect one of the following options by inputting the corresponding number: ")
 print("\n1 - STOCK PRICE")
 print("2 - STOCK PERFORMANCE")
 
-operation = input("")
+operation = input("\nPlease make a selection: ")
 
 stock_symbols = []
-prices = []
 
 def price_lookup():
     while True:
@@ -39,16 +38,18 @@ def price_lookup():
     response = data.DataReader(stock_symbols, data_source, date_start, end_date)
 # PARSE RESPONSE
     daily_closing_prices = response.ix["Close"] # ix() is a pandas DataFrame function
-
-    print("\nHere are the Stock Prices for the days you indicated:\n")
-    print(daily_closing_prices)
-    confirmation = input("\nWould you like to save this data to a file? (Y/N) ")
-    confirmation = confirmation.upper()
-    if confirmation == "Y":
-        prices = daily_closing_prices.to_csv(csv_file_path)
-        print("Great! The data has been saved")
+    if daily_closing_prices.empty:
+        print("\nThe market was closed that day. Try a different date:\n ")
     else:
-        print("OK. The data is not saved")
+        print("\nHere are the Stock Prices for the days you indicated:\n")
+        print(daily_closing_prices)
+        confirmation = input("\nWould you like to save this data to a file? (Y/N) ")
+        confirmation = confirmation.upper()
+        if confirmation == "Y":
+            prices = daily_closing_prices.to_csv(csv_file_path)
+            print("Great! The data has been saved to data/stock_prices.csv")
+        else:
+            print("OK. The data is not saved")
 
 def performance():
     symbol =input("Please select a stock by symbol: ")
@@ -70,18 +71,21 @@ def performance():
 
     daily_closing_prices = response.ix["Close"]
     daily_closing_prices2 = response2.ix["Close"]
-    print(daily_closing_prices)
-    print(daily_closing_prices2)
-
-    difference = daily_closing_prices2.values-daily_closing_prices.values
-    difference = float(difference)
-
-    perform = number_of_stocks*difference
-
-    if daily_closing_prices2.values > daily_closing_prices.values:
-        print("\nYour gain is: " + str('${0:.2f}'.format(perform)))
+    if daily_closing_prices.empty or daily_closing_prices2.empty:
+        print("\nThe market was closed that day. Try a different date.\n ")
     else:
-        print("\nYour loss is: " + str('${0:.2f}'.format(abs(perform))))
+        print(daily_closing_prices)
+        print(daily_closing_prices2)
+
+        difference = daily_closing_prices2.values-daily_closing_prices.values
+        difference = float(difference)
+
+        perform = number_of_stocks*difference
+
+        if daily_closing_prices2.values > daily_closing_prices.values:
+            print("\nYour gain is: " + str('${0:.2f}'.format(perform)))
+        else:
+            print("\nYour loss is: " + str('${0:.2f}'.format(abs(perform))))
 
 if operation == "1": price_lookup()
 elif operation == "2": performance()
