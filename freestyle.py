@@ -25,31 +25,40 @@ def price_lookup():
             break
         else:
             stock_symbols.append(symbol)
-
-    date_start = input("Please select a start date in the format yyyy-mm-dd: ")
-    end_date = input("Please select an end date in the format yyyy-mm-dd: ")
-
-    date_start = datetime.datetime.strptime(date_start, '%Y-%m-%d')
-    end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+    if len(stock_symbols) > 0:
+        date_start = input("Please select a start date in the format yyyy-mm-dd: ")
+        end_date = input("Please select an end date in the format yyyy-mm-dd: ")
+        try:
+            date_start = datetime.datetime.strptime(date_start, '%Y-%m-%d')
+            end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+        except ValueError:
+            print("\nIncorrect Dates!\n")
+            date_start = input("Please select a start date in the format yyyy-mm-dd: ")
+            end_date = input("Please select an end date in the format yyyy-mm-dd: ")
+            date_start = datetime.datetime.strptime(date_start, '%Y-%m-%d')
+            end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
 
 # COMPILE REQUEST PARAMS
-    data_source = 'google'
+        data_source = 'google'
 # ISSUE REQUEST
-    response = data.DataReader(stock_symbols, data_source, date_start, end_date)
+        response = data.DataReader(stock_symbols, data_source, date_start, end_date)
 # PARSE RESPONSE
-    daily_closing_prices = response.ix["Close"] # ix() is a pandas DataFrame function
-    if daily_closing_prices.empty:
-        print("\nThe market was closed that day. Try a different date:\n ")
-    else:
-        print("\nHere are the Stock Prices for the days you indicated:\n")
-        print(daily_closing_prices)
-        confirmation = input("\nWould you like to save this data to a file? (Y/N) ")
-        confirmation = confirmation.upper()
+        daily_closing_prices = response.ix["Close"] # ix() is a pandas DataFrame function
+        if daily_closing_prices.empty:
+            print("\nThe market was closed that day. Try a different date.\n ")
+        else:
+            print("\nHere are the Stock Prices for the days you indicated:\n")
+            print(daily_closing_prices)
+            confirmation = input("\nWould you like to save this data to a file? (Y/N) ")
+            confirmation = confirmation.upper()
         if confirmation == "Y":
             prices = daily_closing_prices.to_csv(csv_file_path)
-            print("Great! The data has been saved to data/stock_prices.csv")
+            print("\nGreat! The data has been saved to data/stock_prices.csv\n")
         else:
-            print("OK. The data is not saved")
+            print("\nOK. The data is not saved\n")
+
+    else:
+        print("\nOperation not selected. Ending program.\n")
 
 def performance():
     symbol =input("Please select a stock by symbol: ")
@@ -62,7 +71,7 @@ def performance():
     date_start = datetime.datetime.strptime(date_start, '%Y-%m-%d')
     end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
 
-    number_of_stocks = input("Please input quantity of stocks owned: ")
+    number_of_stocks = input("Please input quantity of shares owned: ")
     number_of_stocks = float(number_of_stocks)
     data_source = 'google'
 
