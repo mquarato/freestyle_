@@ -4,6 +4,7 @@ from datetime import datetime
 import datetime
 from dateutil.parser import parse
 import csv
+import sys
 
 csv_file_path = "data/stock_prices.csv"
 
@@ -32,11 +33,15 @@ def price_lookup():
             date_start = datetime.datetime.strptime(date_start, '%Y-%m-%d')
             end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
         except ValueError:
-            print("\nIncorrect Dates!\n")
+            print("\nIncorrect Date Format!\n")
             date_start = input("Please select a start date in the format yyyy-mm-dd: ")
             end_date = input("Please select an end date in the format yyyy-mm-dd: ")
-            date_start = datetime.datetime.strptime(date_start, '%Y-%m-%d')
-            end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+            try:
+                date_start = datetime.datetime.strptime(date_start, '%Y-%m-%d')
+                end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+            except ValueError:
+                print("\nIncorrect Date Format Again! Program Ending. \n")
+                sys.exit()
 
 # COMPILE REQUEST PARAMS
         data_source = 'google'
@@ -56,7 +61,6 @@ def price_lookup():
             print("\nGreat! The data has been saved to data/stock_prices.csv\n")
         else:
             print("\nOK. The data is not saved\n")
-
     else:
         print("\nOperation not selected. Ending program.\n")
 
@@ -68,8 +72,16 @@ def performance():
     date_start = input("When did you buy the stock? input in the format yyyy-mm-dd: ")
     end_date = input("When did you sell the stock? input in the format yyyy-mm-dd: ")
 
-    date_start = datetime.datetime.strptime(date_start, '%Y-%m-%d')
-    end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+    try:
+        date_start = datetime.datetime.strptime(date_start, '%Y-%m-%d')
+        end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+    except ValueError:
+        print("\nIncorrect Date Format!\n")
+        sys.exit()
+        # date_start = input("Please select a start date in the format yyyy-mm-dd: ")
+        # end_date = input("Please select an end date in the format yyyy-mm-dd: ")
+        # date_start = datetime.datetime.strptime(date_start, '%Y-%m-%d')
+        # end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
 
     number_of_stocks = input("Please input quantity of shares owned: ")
     number_of_stocks = float(number_of_stocks)
@@ -81,7 +93,7 @@ def performance():
     daily_closing_prices = response.ix["Close"]
     daily_closing_prices2 = response2.ix["Close"]
     if daily_closing_prices.empty or daily_closing_prices2.empty:
-        print("\nThe market was closed that day. Try a different date.\n ")
+        print("\nThe market was closed one or both of those days. Try a different date.\n ")
     else:
         print(daily_closing_prices)
         print(daily_closing_prices2)
