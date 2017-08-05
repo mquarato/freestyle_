@@ -1,0 +1,5 @@
+Requirements:
+
+Python version 3.x
+
+Pandas API 

@@ -27,15 +27,15 @@ def price_lookup():
         else:
             stock_symbols.append(symbol)
     if len(stock_symbols) > 0:
-        date_start = input("Please select a start date in the format yyyy-mm-dd: ")
-        end_date = input("Please select an end date in the format yyyy-mm-dd: ")
+        date_start = input("Please select an open-market start date in the format yyyy-mm-dd: ")
+        end_date = input("Please select an open-market end date in the format yyyy-mm-dd: ")
         try:
             date_start = datetime.datetime.strptime(date_start, '%Y-%m-%d')
             end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
         except ValueError:
             print("\nIncorrect Date Format!\n")
-            date_start = input("Please select a start date in the format yyyy-mm-dd: ")
-            end_date = input("Please select an end date in the format yyyy-mm-dd: ")
+            date_start = input("Please select an open-market start date in the format yyyy-mm-dd: ")
+            end_date = input("Please select an open-market end date in the format yyyy-mm-dd: ")
             try:
                 date_start = datetime.datetime.strptime(date_start, '%Y-%m-%d')
                 end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
@@ -69,8 +69,8 @@ def performance():
     symbol = symbol.upper()
     stock_symbols.append(symbol)
 
-    date_start = input("When did you buy the stock? input in the format yyyy-mm-dd: ")
-    end_date = input("When did you sell the stock? input in the format yyyy-mm-dd: ")
+    date_start = input("When did you buy the stock? Please select an open-market date and input in the format yyyy-mm-dd: ")
+    end_date = input("When did you sell the stock? Please select an open-market date and input in the format yyyy-mm-dd: ")
 
     try:
         date_start = datetime.datetime.strptime(date_start, '%Y-%m-%d')
