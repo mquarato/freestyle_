@@ -22,7 +22,7 @@ See requirements.txt file
 ## Usage
 
 ```shell
-python3 freestyle_/freestyle.py
+python3 freestyle_/app/freestyle.py
 ```
 The user will be prompted to make one of two choices:
 
